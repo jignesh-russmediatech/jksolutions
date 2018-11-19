@@ -1,0 +1,42 @@
+gcloud init
+gcloud auth login
+gcloud container clusters get-credentials jksolutions --zone us-central1-a --project jignesh-dad-project-21120
+5 
+===========================================================
+if namespace defined "jksolutions-default"
+kubectl config set-context $(kubectl config current-context) --namespace=jksolutions-default
+===========================================================
+Build docker image
+
+docker build -t jksolutions:latest .
+===========================================================
+push docker local image to gcr
+docker push us.gcr.io/jignesh-dad-project-211205/jksolutions:latest
+
+===========================================================
+kubectl run jksolutions --image=us.gcr.io/jignesh-dad-project-211205/jksolutions:latest --port=80
+kubectl expose deployment jksolutions --type="LoadBalancer"
+
+
+kubectl scale deployment jksolutions --replicas=2 (down from 3 to 2)
+
+AUTOSCALING
+========================
+kubectl autoscale deployment jksolutions --min=1 --max=3 --cpu-percent=75
+========================
+kubectl autoscale deployment jksolutions --min=5 --max=10 --cpu-percent=75
+
+http://35.224.172.88/
+
+RUN LOCALY
+===================
+docker run -it -p 80:80 jksolutions:latest
+==================
+http://localhost
+
+rolling out update of image on pods
+kubectl get deployments
+kubectl get rs
+kubectl get pods
+
+kubectl set image deployments/jksolutions jksolutions=us.gcr.io/jignesh-dad-project-211205/jksolutions:v1
