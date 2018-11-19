@@ -1,0 +1,6 @@
+gcloud auth login
+#khushbu
+~/google-cloud-sdk/bin/gcloud config set project prod-project-216805
+gcloud app deploy
+gcloud app browse
+
